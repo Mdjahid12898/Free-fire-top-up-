@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Lite TopUp</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#eef2ff;
+}
+
+/* Header */
+.header{
+    background:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:26px;
+    font-weight:700;
+    color:#6a14f0;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.balance{
+    background:#6a14f0;
+    color:white;
+    padding:8px 18px;
+    border-radius:25px;
+    font-size:18px;
+}
+
+/* Top Box */
+.top-box{
+    background:white;
+    margin:15px;
+    padding:18px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.top-img{
+    width:80px;
+    height:80px;
+    border-radius:12px;
+    background-size:cover;
+    background-position:center;
+    background-image:url('https://i.ibb.co/Q3Kr5RyD/IMG-20251120-121340.png');
+}
+
+.title{
+    font-size:22px;
+    font-weight:700;
+}
+
+.sub{
+    color:#666;
+}
+
+/* Section */
+.section-title{
+    font-size:22px;
+    font-weight:700;
+    margin:15px;
+    color:#333;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    padding:0 15px 20px;
+}
+
+/* Package Box */
+.box{
+    background:white;
+    padding:14px;
+    border-radius:12px;
+    text-align:center;
+    border:2px solid transparent;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    transition:0.2s;
+}
+
+.box.selected{
+    border-color:#6a14f0;
+    background:#efe4ff;
+}
+
+.b-title{
+    font-size:16px;
+    font-weight:bold;
+}
+
+.b-price{
+    color:#6a14f0;
+    font-size:15px;
+    font-weight:bold;
+    margin-top:3px;
+}
+
+/* Account */
+.account-box{
+    background:white;
+    margin:15px;
+    padding:18px;
+    border-radius:16px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:16px;
+    margin-top:10px;
+}
+
+/* BUY */
+.buy{
+    width:90%;
+    margin:15px auto;
+    display:block;
+    padding:14px;
+    background:#6a14f0;
+    color:white;
+    font-size:18px;
+    border-radius:12px;
+    text-align:center;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    GM TopUp
+    <div class="balance">৳ 00</div>
+</div>
+
+<!-- Top box -->
+<div class="top-box">
+    <div class="top-img"></div>
+    <div>
+        <div class="title">Weekly Lite</div>
+        <div class="sub">Free Fire / Membership</div>
+    </div>
+</div>
+
+<!-- SELECT -->
+<div class="section-title">1️⃣ Select Recharge</div>
+
+<div class="grid">
+
+    <div class="box" onclick="selectPack(this)">
+        <div class="b-title">1X Weekly Lite</div>
+        <div class="b-price">BDT 40</div>
+    </div>
+
+    <div class="box" onclick="selectPack(this)">
+        <div class="b-title">2X Weekly Lite</div>
+        <div class="b-price">BDT 79</div>
+    </div>
+
+    <div class="box" onclick="selectPack(this)">
+        <div class="b-title">3X Weekly Lite</div>
+        <div class="b-price">BDT 118</div>
+    </div>
+
+    <div class="box" onclick="selectPack(this)">
+        <div class="b-title">5X Weekly Lite</div>
+        <div class="b-price">BDT 196</div>
+    </div>
+
+    <div class="box" onclick="selectPack(this)">
+        <div class="b-title">10X Weekly Lite</div>
+        <div class="b-price">BDT 392</div>
+    </div>
+
+    <div class="box" onclick="selectPack(this)">
+        <div class="b-title">20X Weekly Lite</div>
+        <div class="b-price">BDT 784</div>
+    </div>
+
+</div>
+
+<!-- ACCOUNT INFO -->
+<div class="section-title">2️⃣ Account Info</div>
+
+<div class="account-box">
+    <label>আপনার গেমের আইডি কোড লিখুন</label>
+    <input type="number" class="input" placeholder="Example: 123456789">
+</div>
+
+<!-- BUY -->
+<a class="buy" onclick="goPay()">Buy Now</a>
+
+<script>
+function selectPack(box){
+    document.querySelectorAll(".box").forEach(b => b.classList.remove("selected"));
+    box.classList.add("selected");
+}
+
+function goPay(){
+
+    let selected = document.querySelector(".box.selected");
+
+    if(!selected){
+        alert("⚠ দয়া করে একটি প্যাকেজ সিলেক্ট করুন!");
+        return;
+    }
+
+    let title = selected.querySelector(".b-title").innerText;
+    let price = selected.querySelector(".b-price").innerText.replace("BDT ","");
+
+    let uid = document.querySelector(".input").value.trim();
+
+    if(uid === ""){
+        alert("⚠ আপনার গেমের আইডি লিখুন!");
+        return;
+    }
+
+    window.location.href =
+        "payment.html?title=" + encodeURIComponent(title) +
+        "&price=" + encodeURIComponent(price) +
+        "&uid=" + encodeURIComponent(uid);
+}
+</script>
+
+</body>
+</html>
