@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Payment - GM TopUp</title>
+<style>
+  :root{--primary:#7b2ff7;--accent:#6a14f0;--muted:#eef2ff}
+  body{margin:0;font-family:Inter, Arial, sans-serif;background:var(--muted);color:#222}
+  .title{width:100%;text-align:center;padding:26px 10px 6px;font-size:34px;color:var(--primary);font-weight:800}
+  .wrap{max-width:520px;margin:18px auto;padding:18px}
+  .card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 8px 30px rgba(20,20,50,0.06)}
+  .product-img{width:180px;height:180px;object-fit:cover;border-radius:12px;margin:12px auto;display:block; background:#f2f2f6}
+  h2{margin:10px 0 4px;text-align:center}
+  .amount{color:var(--primary);font-size:28px;text-align:center;font-weight:800;margin:6px 0}
+  .uidline{color:#666;text-align:center;margin-bottom:12px}
+  .primary-btn{display:block;width:100%;background:#1679ff;color:#fff;padding:12px;border-radius:10px;font-weight:700;border:none;cursor:default;margin-top:8px}
+  .logos{display:flex;gap:12px;margin-top:16px}
+  .logo-box{flex:1;background:#fff;padding:12px;border-radius:12px;box-shadow:0 6px 16px rgba(15,15,40,0.05);display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .logo-box img{max-width:120px;height:auto;display:block}
+  .bottom-pay{position:fixed;left:0;right:0;bottom:0;padding:18px;background:#e6f0ff;border-top-left-radius:16px;border-top-right-radius:16px;display:flex;justify-content:center;align-items:center}
+  .pay-btn{background:linear-gradient(180deg,#dff0ff,#cfe7ff);border-radius:14px;padding:14px 18px;font-size:20px;color:var(--primary);font-weight:800;width:min(640px,92%);text-align:center;box-shadow:0 6px 20px rgba(20,20,60,0.05)}
+  /* modal */
+  .modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:60}
+  .modal{width:92%;max-width:420px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 8px 30px rgba(0,0,0,0.2)}
+  .modal h3{margin:6px 0 8px}
+  .field{width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb;margin-top:8px}
+  .verify-btn{background:var(--accent);color:#fff;padding:12px;border-radius:10px;border:none;margin-top:12px;display:block;width:100%;font-weight:700}
+  .small-muted{font-size:13px;color:#666;margin-top:8px}
+  /* responsive */
+  @media(min-width:640px){ .product-img{width:220px;height:220px} .title{font-size:36px} }
+</style>
+</head>
+<body>
+
+<div class="title">Payment</div>
+
+<div class="wrap">
+  <div class="card">
+    <img id="productImg" class="product-img" src="" alt="Product" />
+    <h2 id="productName">GM TopUp</h2>
+    <div id="amount" class="amount">৳ 0</div>
+    <div class="uidline">UID: <span id="uidSpan">-</span></div>
+
+    <button class="primary-btn">📱 মোবাইল ব্যাংকিং</button>
+
+    <div class="logos" style="margin-bottom:6px">
+      <div class="logo-box" id="bkashBtn" title="Pay with bKash">
+        <img id="bkashImg" src="https://i.ibb.co/DHcxsR5j/bkash.png" alt="bKash">
+      </div>
+
+      <div class="logo-box" id="nagadBtn" title="Pay with Nagad">
+        <img id="nagadImg" src="https://i.ibb.co/39WQW9Nm/nagad.png" alt="Nagad">
+      </div>
+    </div>
+
+    <div class="small-muted" style="text-align:center">Payment by manual mobile banking. Select a method and follow instructions.</div>
+  </div>
+</div>
+
+<div class="bottom-pay">
+  <div id="payNow" class="pay-btn">Pay 0 BDT</div>
+</div>
+
+<!-- Modal for payment instr & transaction id -->
+<div id="modal" class="modal-back">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 id="modalTitle">bKash Payment</h3>
+      <button onclick="closeModal()" style="border:none;background:#fff;font-weight:800;cursor:pointer">✕</button>
+    </div>
+
+    <div id="payInstructions" style="margin-top:6px">
+      <p style="margin:6px 0">*247# ডায়াল করে আপনার bKash অ্যাপে যান।</p>
+      <p style="margin:6px 0"><strong>Send Money</strong> এ ক্লিক করুন।</p>
+      <p style="margin:6px 0">প্রাপক নম্বর: <strong id="receiverNumber">01765326575</strong>
+        <button onclick="copyReceiver()" style="margin-left:8px;padding:6px;border-radius:6px;border:none;background:#f0f0f0;cursor:pointer">Copy</button>
+      </p>
+      <p class="small-muted">টাকার পরিমাণ: <strong id="instrAmount">0</strong> BDT</p>
+    </div>
+
+    <label style="display:block;margin-top:8px">এখানে আপনার Transaction ID দিন:</label>
+    <input id="txnInput" class="field" placeholder="e.g. TXN123456789" />
+
+    <button id="verifyBtn" class="verify-btn">VERIFY</button>
+
+    <div id="verifyResult" class="small-muted"></div>
+  </div>
+</div>
+
+<script>
+  // Read URL params
+  const params = new URLSearchParams(window.location.search);
+  const amountParam = params.get('amount') || params.get('price') || '0';
+  const uidParam = params.get('uid') || params.get('ID') || '-';
+  const imgParam = params.get('img') || '';
+  const prodParam = params.get('product') || 'GM TopUp';
+
+  // Show values
+  const amountEl = document.getElementById('amount');
+  const payNowEl = document.getElementById('payNow');
+  const uidSpan = document.getElementById('uidSpan');
+  const productImg = document.getElementById('productImg');
+  const productName = document.getElementById('productName');
+  const instrAmount = document.getElementById('instrAmount');
+
+  // parse amount to nice format
+  const amt = (''+amountParam).trim() || '0';
+  amountEl.innerText = '৳ ' + amt;
+  payNowEl.innerText = 'Pay ' + amt + ' BDT';
+  uidSpan.innerText = uidParam;
+  productName.innerText = decodeURIComponent(prodParam);
+
+  instrAmount.innerText = amt;
+
+  // set image with fallback
+  function setImage(src){
+    if(!src){ productImg.src = 'https://i.ibb.co/3mC9SdCS/1745298889.png'; return; }
+    try{
+      productImg.src = decodeURIComponent(src);
+    }catch(e){
+      productImg.src = src;
+    }
+  }
+  setImage(imgParam);
+
+  // Logo click handlers -> open modal with proper receiver & text
+  const modal = document.getElementById('modal');
+  const modalTitle = document.getElementById('modalTitle');
+  const receiverNumber = document.getElementById('receiverNumber');
+
+  document.getElementById('bkashBtn').addEventListener('click', function(){
+    modalTitle.innerText = 'bKash Payment';
+    receiverNumber.innerText = '01765326575'; // change if you want
+    document.getElementById('payInstructions').querySelector('p').innerText = '*247# ডায়াল করে আপনার bKash অ্যাপে যান/বা bKash অ্যাপ খুলুন।';
+    instrAmount.innerText = amt;
+    openModal();
+  });
+
+  document.getElementById('nagadBtn').addEventListener('click', function(){
+    modalTitle.innerText = 'Nagad Payment';
+    receiverNumber.innerText = '01765326575'; // change if you want
+    document.getElementById('payInstructions').querySelector('p').innerText = '*167# ডায়াল করে আপনার Nagad অ্যাপে যান/বা Nagad অ্যাপ খুলুন।';
+    instrAmount.innerText = amt;
+    openModal();
+  });
+
+  function openModal(){ modal.style.display='flex'; document.getElementById('txnInput').value=''; document.getElementById('verifyResult').innerText=''; }
+  function closeModal(){ modal.style.display='none'; }
+
+  function copyReceiver(){
+    const num = receiverNumber.innerText;
+    navigator.clipboard?.writeText(num).then(()=>alert('Number copied: ' + num)).catch(()=>{ prompt('Copy this number:', num); });
+  }
+
+  // Verify button (frontend only) - in real app send to backend to validate
+  document.getElementById('verifyBtn').addEventListener('click', function(){
+    const tx = document.getElementById('txnInput').value.trim();
+    const result = document.getElementById('verifyResult');
+    if(!tx){ result.innerText = 'অনুগ্রহ করে Transaction ID দিন।'; result.style.color='crimson'; return; }
+    // simulate success
+    result.style.color='green';
+    result.innerText = 'Transaction ID গ্রহণ করা হয়েছে — অটোমেটিক ভেরিফাই করার জন্য সার্ভারে পাঠানো হবে।';
+    // TODO: POST to server to record transaction + validate via API
+    setTimeout(()=>{ closeModal(); alert('Payment submitted. Admin will verify / auto-process if configured.'); },900);
+  });
+
+  // bottom pay click (shortcut)
+  payNowEl.addEventListener('click', function(){
+    // scroll to logos or open modal with default method
+    window.scrollTo({ top: document.querySelector('.card').offsetTop, behavior:'smooth' });
+  });
+
+  // fallback if product image fails to load
+  productImg.onerror = function(){ productImg.src = 'https://i.ibb.co/3mC9SdCS/01765326575.png'; }
+</script>
+
+</body>
+</html>
