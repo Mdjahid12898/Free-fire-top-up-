@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ID Code TopUp</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#eef2ff;
+}
+
+/* Header */
+.header{
+    background:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:26px;
+    font-weight:700;
+    color:#6a14f0;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.balance{
+    background:#6a14f0;
+    color:white;
+    padding:8px 18px;
+    border-radius:25px;
+    font-size:18px;
+}
+
+/* Product Top Block */
+.top-box{
+    background:white;
+    margin:15px;
+    padding:18px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* TOP IMG FIXED */
+.top-img{
+    width:80px;
+    height:80px;
+    border-radius:12px;
+    object-fit:cover;
+}
+
+/* Title */
+.title{
+    font-size:24px;
+    font-weight:700;
+}
+
+.sub{
+    color:#666;
+}
+
+/* Section Title */
+.section-title{
+    font-size:22px;
+    font-weight:700;
+    margin:15px;
+    color:#333;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    padding:0 15px 20px;
+}
+
+/* Diamond Box */
+.diamond-box{
+    background:white;
+    padding:14px;
+    border-radius:12px;
+    text-align:center;
+    border:2px solid transparent;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    transition:0.2s;
+}
+
+.diamond-box.selected{
+    border-color:#6a14f0;
+    background:#efe4ff;
+}
+
+.d-title{
+    font-size:16px;
+    font-weight:bold;
+}
+
+.d-price{
+    color:#6a14f0;
+    font-size:15px;
+    font-weight:bold;
+    margin-top:3px;
+}
+
+/* Account box */
+.account-box{
+    background:white;
+    margin:15px;
+    padding:18px;
+    border-radius:16px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:16px;
+    margin-top:10px;
+}
+
+/* BUY NOW */
+.buy{
+    width:90%;
+    margin:15px auto;
+    display:block;
+    padding:14px;
+    background:#6a14f0;
+    color:white;
+    font-size:18px;
+    border-radius:12px;
+    text-align:center;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    GM TopUp
+    <div class="balance">৳ 00</div>
+</div>
+
+<!-- PRODUCT BOX -->
+<div class="top-box">
+    <img src="https://i.ibb.co/sd90nTrf/IMG-20251120-114117.png" class="top-img">
+    <div>
+        <div class="title">ID Code TopUp</div>
+        <div class="sub">Game / Top up</div>
+    </div>
+</div>
+
+<!-- SELECT -->
+<div class="section-title">1️⃣ Select Recharge</div>
+
+<div class="grid">
+
+    <div class="diamond-box" onclick="selectPack(this)">
+        <div class="d-title">25 Diamond TopUp</div>
+        <div class="d-price">BDT 19</div>
+    </div>
+
+    <div class="diamond-box" onclick="selectPack(this)">
+        <div class="d-title">50 Diamond TopUp</div>
+        <div class="d-price">BDT 34</div>
+    </div>
+
+    <div class="diamond-box" onclick="selectPack(this)">
+        <div class="d-title">75 Diamond TopUp</div>
+        <div class="d-price">BDT 51</div>
+    </div>
+
+    <div class="diamond-box" onclick="selectPack(this)">
+        <div class="d-title">100 Diamond TopUp</div>
+        <div class="d-price">BDT 67</div>
+    </div>
+
+    <div class="diamond-box" onclick="selectPack(this)">
+        <div class="d-title">115 Diamond TopUp</div>
+        <div class="d-price">BDT 76</div>
+    </div>
+
+    <div class="diamond-box" onclick="selectPack(this)">
+        <div class="d-title">240 Diamond TopUp</div>
+        <div class="d-price">BDT 151</div>
+    </div>
+
+    <div class="diamond-box" onclick="selectPack(this)">
+        <div class="d-title">505 Diamond TopUp</div>
+        <div class="d-price">BDT 319</div>
+    </div>
+
+    <div class="diamond-box" onclick="selectPack(this)">
+        <div class="d-title">355 Diamond TopUp</div>
+        <div class="d-price">BDT 227</div>
+    </div>
+
+</div>
+
+<!-- ACCOUNT INFO -->
+<div class="section-title">2️⃣ Account Info</div>
+
+<div class="account-box">
+    <label>আপনার গেমের আইডি কোড লিখুন</label>
+    <input type="number" class="input" placeholder="Example: 123456789">
+</div>
+
+<!-- BUY -->
+<a class="buy" onclick="goPay()">Buy Now</a>
+
+<script>
+
+// প্যাক সিলেক্ট
+function selectPack(box){
+    document.querySelectorAll(".diamond-box")
+        .forEach(b => b.classList.remove("selected"));
+
+    box.classList.add("selected");
+}
+
+// BUY NOW
+function goPay(){
+
+    let selected = document.querySelector(".diamond-box.selected");
+    if(!selected){
+        alert("⚠ একটি প্যাকেজ সিলেক্ট করুন!");
+        return;
+    }
+
+    let title = selected.querySelector(".d-title").innerText;
+    let price = selected.querySelector(".d-price").innerText.replace("BDT ","");
+
+    let uid = document.querySelector(".input").value.trim();
+
+    if(uid === ""){
+        alert("⚠ আপনার গেমের আইডি কোড লিখুন!");
+        return;
+    }
+
+    // payment.html এ পাঠানো
+    window.location.href =
+        "payment.html?title=" + encodeURIComponent(title) +
+        "&price=" + encodeURIComponent(price) +
+        "&uid=" + encodeURIComponent(uid);
+}
+
+</script>
+
+</body>
+</html>
