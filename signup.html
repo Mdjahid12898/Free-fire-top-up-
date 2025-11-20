@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signup – GM TOP UP</title>
+
+<style>
+body{
+    margin:0;
+    padding:0;
+    font-family: Arial;
+    background:#101010;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+.box{
+    width:330px;
+    padding:25px;
+    background:#000;
+    border-radius:15px;
+    border:2px solid #00ff55;
+}
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+input{
+    width:100%;
+    margin:10px 0;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #00ff55;
+    background:#000;
+    color:white;
+}
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    background:#00ff55;
+    color:#000;
+    font-size:17px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+a{ color:#00ff55; }
+</style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Signup</h2>
+
+    <input type="text" id="name" placeholder="Your Name">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="pass" placeholder="Password">
+
+    <button onclick="register()">Signup</button>
+
+    <p style="margin-top:10px; text-align:center;">
+        Already have an account? <a href="login.html">Login</a>
+    </p>
+</div>
+
+<script>
+function register(){
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let pass = document.getElementById("pass").value;
+
+    if(name === "" || email === "" || pass === ""){
+        alert("সব ঘর পূরণ করুন!");
+        return;
+    }
+
+    localStorage.setItem("gmuser_name", name);
+    localStorage.setItem("gmuser_email", email);
+    localStorage.setItem("gmuser_pass", pass);
+
+    alert("Signup সফল হয়েছে!");
+
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
