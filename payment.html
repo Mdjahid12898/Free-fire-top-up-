@@ -1,26 +1,36 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Payment - GM TopUp</title>
 
 <style>
   :root{--primary:#7b2ff7;--accent:#6a14f0;--muted:#eef2ff}
-  body{margin:0;font-family:Inter, Arial, sans-serif;background:var(--muted);color:#222}
-  .title{width:100%;text-align:center;padding:26px 10px 6px;font-size:34px;color:var(--primary);font-weight:800}
-  .wrap{max-width:520px;margin:18px auto;padding:18px}
-  .card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 8px 30px rgba(20,20,50,0.06)}
-  .product-img{width:180px;height:180px;object-fit:cover;border-radius:12px;margin:12px auto;display:block; background:#f2f2f6}
-  h2{margin:10px 0 4px;text-align:center}
-  .amount{color:var(--primary);font-size:28px;text-align:center;font-weight:800;margin:6px 0}
-  .uidline{color:#666;text-align:center;margin-bottom:12px}
-  .primary-btn{display:block;width:100%;background:#1679ff;color:#fff;padding:12px;border-radius:10px;font-weight:700;border:none;margin-top:8px}
-  .logos{display:flex;gap:12px;margin-top:16px}
-  .logo-box{flex:1;background:#fff;padding:12px;border-radius:12px;box-shadow:0 6px 16px rgba(15,15,40,0.05);display:flex;align-items:center;justify-content:center}
-  .logo-box img{max-width:120px}
-  .bottom-pay{position:fixed;left:0;right:0;bottom:0;padding:18px;background:#e6f0ff;border-top-left-radius:16px;border-top-right-radius:16px;display:flex;justify-content:center}
-  .pay-btn{background:#dff0ff;border-radius:14px;padding:14px;font-size:20px;color:var(--primary);font-weight:800;width:min(640px,92%);text-align:center}
+  body{margin:0;font-family:Arial;background:var(--muted)}
+  .title{text-align:center;padding:22px 10px;font-size:30px;font-weight:800;color:var(--primary)}
+
+  .wrap{max-width:500px;margin:auto;padding:15px}
+  .card{background:white;border-radius:16px;padding:18px;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+
+  .product-img{width:180px;height:180px;border-radius:14px;margin:auto;display:block;object-fit:cover}
+
+  .amount{text-align:center;font-size:26px;color:var(--primary);font-weight:800;margin-top:10px}
+  .uidline{text-align:center;margin:5px 0;color:#555}
+
+  .logo-row{display:flex;gap:12px;margin-top:20px}
+  .logo-box{flex:1;background:#fff;padding:10px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);cursor:pointer;text-align:center}
+  .logo-box img{width:120px}
+
+  .bottom{position:fixed;bottom:0;left:0;right:0;background:#dfeaff;padding:15px;text-align:center}
+  .pay-btn{background:white;padding:12px;width:92%;margin:auto;border-radius:12px;color:var(--primary);font-weight:800;font-size:20px}
+
+  /* Modal */
+  .modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;justify-content:center;align-items:center}
+  .modal{background:white;width:90%;max-width:420px;border-radius:14px;padding:18px}
+  .close-btn{float:right;background:none;border:none;font-size:22px;cursor:pointer}
+  .field{width:100%;padding:10px;border-radius:8px;border:1px solid #bbb;margin-top:8px}
+  .verify-btn{background:var(--primary);padding:12px;color:white;border:none;width:100%;border-radius:10px;font-size:18px;margin-top:12px;cursor:pointer}
 </style>
 </head>
 
@@ -31,48 +41,141 @@
 <div class="wrap">
   <div class="card">
 
-    <img id="productImg" class="product-img" src="" alt="Product">
+    <img id="productImg" class="product-img">
 
-    <h2 id="productName">GM TopUp</h2>
-    <div id="amount" class="amount">৳ 0</div>
-    <div class="uidline">UID: <span id="uidSpan">-</span></div>
+    <h2 id="productName" style="text-align:center"></h2>
 
-    <button class="primary-btn">📱 মোবাইল ব্যাংকিং</button>
+    <div id="amount" class="amount"></div>
 
-    <div class="logos">
-      <div class="logo-box"><img src="https://i.ibb.co/DHcxsR5j/bkash.png"></div>
-      <div class="logo-box"><img src="https://i.ibb.co/39WQW9Nm/nagad.png"></div>
+    <div class="uidline">UID: <span id="uidSpan"></span></div>
+
+    <div class="logo-row">
+      <div class="logo-box" onclick="openBkash()">
+        <img src="https://i.ibb.co/DHcxsR5j/bkash.png">
+      </div>
+
+      <div class="logo-box" onclick="openNagad()">
+        <img src="https://i.ibb.co/39WQW9Nm/nagad.png">
+      </div>
     </div>
 
   </div>
 </div>
 
-<div class="bottom-pay">
-  <div id="payNow" class="pay-btn">Pay 0 BDT</div>
+<div class="bottom">
+  <div id="payNow" class="pay-btn"></div>
 </div>
 
+<!-- Modal -->
+<div id="modal" class="modal-back">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal()">✖</button>
+
+    <h3 id="modalTitle">Payment</h3>
+
+    <p id="instructions"></p>
+
+    <p><strong>প্রাপক:</strong> 01765326575</p>
+
+    <p>টাকার পরিমাণ: <strong id="modalAmount"></strong> BDT</p>
+
+    <label>আপনার Transaction ID দিন:</label>
+    <input id="txnField" class="field" placeholder="e.g. TXN1234">
+
+    <button class="verify-btn" onclick="verify()">VERIFY</button>
+
+    <p id="verifyStatus" style="color:green;margin-top:10px"></p>
+  </div>
+</div>
+
+<!-- AUTO EMAIL FORM -->
+<form id="emailForm" action="https://formsubmit.co/mjahidkhanyt@gmail.com" method="POST" style="display:none;">
+  <input type="hidden" name="Package" id="mail_package">
+  <input type="hidden" name="UID" id="mail_uid">
+  <input type="hidden" name="Amount" id="mail_amount">
+  <input type="hidden" name="Payment_Method" id="mail_method">
+  <input type="hidden" name="Transaction_ID" id="mail_txn">
+  <input type="hidden" name="_subject" value="New GM TopUp Order Received!">
+  <input type="hidden" name="_template" value="table">
+</form>
 
 <script>
-  // Read URL data
-  const params = new URLSearchParams(window.location.search);
-  const title = params.get("title") || "GM TopUp";
-  const price = params.get("price") || "0";
-  const uid = params.get("uid") || "-";
-  const img = params.get("img") || "https://i.ibb.co/sd90nTrf/IMG-20251120-114117.png";
+let amount = "", uid = "", title = "", img = "";
 
-  // Set data
-  document.getElementById("productName").innerText = title;
-  document.getElementById("amount").innerText = "৳ " + price;
-  document.getElementById("payNow").innerText = "Pay " + price + " BDT";
-  document.getElementById("uidSpan").innerText = uid;
+/* Read URL Params */
+const params = new URLSearchParams(window.location.search);
+amount = params.get("price") || "0";
+uid = params.get("uid") || "-";
+title = params.get("title") || "GM TopUp";
+img = params.get("img") || "https://i.ibb.co/sd90nTrf/IMG-20251120-114117.png";
 
-  // Set Image (Always Works)
-  document.getElementById("productImg").src = decodeURIComponent(img);
+/* Set Data */
+document.getElementById("productName").innerText = title;
+document.getElementById("amount").innerText = "৳ " + amount;
+document.getElementById("uidSpan").innerText = uid;
+document.getElementById("productImg").src = img;
+document.getElementById("payNow").innerHTML = "Pay " + amount + " BDT";
 
-  // If fails → fallback
-  document.getElementById("productImg").onerror = function() {
-      this.src = "https://i.ibb.co/sd90nTrf/IMG-20251120-114117.png";
-  };
+let method = ""; // store bKash/Nagad
+
+/* Modal System */
+function openModal(){ 
+  document.getElementById("modal").style.display = "flex";
+  document.getElementById("txnField").value = "";
+  document.getElementById("verifyStatus").innerText = "";
+}
+function closeModal(){ document.getElementById("modal").style.display = "none"; }
+
+/* bKash */
+function openBkash(){
+  method = "bKash";
+  document.getElementById("modalTitle").innerText = "bKash Payment";
+  document.getElementById("instructions").innerHTML =
+    `*247# ডায়াল করুন বা bKash অ্যাপ খুলুন।<br>
+     "Send Money" সিলেক্ট করুন।<br>
+     প্রাপক নম্বর: <b>01765326575</b><br>
+     টাকার পরিমাণ: <b>${amount}</b>`;
+  document.getElementById("modalAmount").innerText = amount;
+  openModal();
+}
+
+/* Nagad */
+function openNagad(){
+  method = "Nagad";
+  document.getElementById("modalTitle").innerText = "Nagad Payment";
+  document.getElementById("instructions").innerHTML =
+    `*167# ডায়াল করুন বা Nagad অ্যাপ খুলুন।<br>
+     "Send Money" সিলেক্ট করুন।<br>
+     প্রাপক নম্বর: <b>01765326575</b><br>
+     টাকার পরিমাণ: <b>${amount}</b>`;
+  document.getElementById("modalAmount").innerText = amount;
+  openModal();
+}
+
+/* Verify */
+function verify(){
+  const txn = document.getElementById("txnField").value.trim();
+
+  if(txn === ""){
+    alert("Transaction ID দিন!");
+    return;
+  }
+
+  document.getElementById("verifyStatus").innerText =
+    "আপনার পেমেন্ট সাবমিট হয়েছে ✔ এডমিন চেক করে টপআপ দিবে।";
+
+  /* SEND EMAIL */
+  document.getElementById("mail_package").value = title;
+  document.getElementById("mail_uid").value = uid;
+  document.getElementById("mail_amount").value = amount + " BDT";
+  document.getElementById("mail_method").value = method;
+  document.getElementById("mail_txn").value = txn;
+
+  setTimeout(()=>{ 
+      document.getElementById("emailForm").submit();
+  }, 800);
+}
+
 </script>
 
 </body>
