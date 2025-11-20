@@ -25,7 +25,6 @@
   .bottom{position:fixed;bottom:0;left:0;right:0;background:#dfeaff;padding:15px;text-align:center}
   .pay-btn{background:white;padding:12px;width:92%;margin:auto;border-radius:12px;color:var(--primary);font-weight:800;font-size:20px}
 
-  /* Modal */
   .modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;justify-content:center;align-items:center}
   .modal{background:white;width:90%;max-width:420px;border-radius:14px;padding:18px}
   .close-btn{float:right;background:none;border:none;font-size:22px;cursor:pointer}
@@ -88,35 +87,33 @@
   </div>
 </div>
 
-<!-- AUTO EMAIL FORM -->
-<form id="emailForm" action="https://formsubmit.co/mjahidkhanyt@gmail.com" method="POST" style="display:none;">
+<!-- Formspree Auto Message -->
+<form id="emailForm" action="https://formspree.io/f/xwprgkyj" method="POST" style="display:none;">
   <input type="hidden" name="Package" id="mail_package">
   <input type="hidden" name="UID" id="mail_uid">
   <input type="hidden" name="Amount" id="mail_amount">
   <input type="hidden" name="Payment_Method" id="mail_method">
   <input type="hidden" name="Transaction_ID" id="mail_txn">
-  <input type="hidden" name="_subject" value="New GM TopUp Order Received!">
-  <input type="hidden" name="_template" value="table">
 </form>
 
 <script>
 let amount = "", uid = "", title = "", img = "";
 
-/* Read URL Params */
+/* URL Params */
 const params = new URLSearchParams(window.location.search);
 amount = params.get("price") || "0";
 uid = params.get("uid") || "-";
 title = params.get("title") || "GM TopUp";
 img = params.get("img") || "https://i.ibb.co/sd90nTrf/IMG-20251120-114117.png";
 
-/* Set Data */
+/* Display Data */
 document.getElementById("productName").innerText = title;
 document.getElementById("amount").innerText = "৳ " + amount;
 document.getElementById("uidSpan").innerText = uid;
 document.getElementById("productImg").src = img;
 document.getElementById("payNow").innerHTML = "Pay " + amount + " BDT";
 
-let method = ""; // store bKash/Nagad
+let method = "";
 
 /* Modal System */
 function openModal(){ 
@@ -152,7 +149,7 @@ function openNagad(){
   openModal();
 }
 
-/* Verify */
+/* VERIFY & SEND MAIL */
 function verify(){
   const txn = document.getElementById("txnField").value.trim();
 
@@ -164,7 +161,7 @@ function verify(){
   document.getElementById("verifyStatus").innerText =
     "আপনার পেমেন্ট সাবমিট হয়েছে ✔ এডমিন চেক করে টপআপ দিবে।";
 
-  /* SEND EMAIL */
+  /* Send to Formspree */
   document.getElementById("mail_package").value = title;
   document.getElementById("mail_uid").value = uid;
   document.getElementById("mail_amount").value = amount + " BDT";
