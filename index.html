@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GM TOP UP</title>
 
+<!-- LOGIN CHECK -->
+<script>
+if(localStorage.getItem("gm_logged") !== "yes"){
+    window.location.href = "login.html";
+}
+</script>
+
 <style>
     body {
         margin: 0;
@@ -33,6 +40,18 @@
         padding: 8px 14px;
         border-radius: 25px;
         color: white;
+        font-weight: bold;
+    }
+
+    /* Logout Button */
+    .logout {
+        margin-left: 10px;
+        background: red;
+        padding: 8px 15px;
+        border-radius: 25px;
+        color: white;
+        font-size: 15px;
+        cursor: pointer;
         font-weight: bold;
     }
 
@@ -79,6 +98,7 @@
         box-shadow: 0 3px 8px rgba(0,0,0,0.15);
         text-align: center;
         transition: 0.3s;
+        cursor:pointer;
     }
     .card:hover {
         transform: scale(1.06);
@@ -109,7 +129,10 @@
 
 <!-- HEADER -->
 <div class="header">
-    <div class="title">GM TOP UP</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+        <div class="title">GM TOP UP</div>
+        <div class="logout" onclick="logout()">Logout</div>
+    </div>
     <div class="balance">৳ 00</div>
 </div>
 
@@ -134,12 +157,12 @@
         <div class="card-title">Weekly</div>
     </div>
 
-    <div class="card" onclick="location.href='levelup.html'">
+    <div class="card" onclick="location.href='level.html'">
         <img src="https://i.ibb.co/CpLTgPrx/1753691567.png">
         <div class="card-title">Level Up Pass</div>
     </div>
 
-    <div class="card" onclick="location.href='weeklylite.html'">
+    <div class="card" onclick="location.href='lite.html'">
         <img src="https://i.ibb.co/vvfD6Z9Z/1745298925.png">
         <div class="card-title">Weekly Lite</div>
     </div>
@@ -149,7 +172,7 @@
         <div class="card-title">Evo Access</div>
     </div>
 
-    <div class="card" onclick="location.href='indonesia.html'">
+    <div class="card" onclick="location.href='indo.html'">
         <img src="https://i.ibb.co/xthYzBQd/1745298966.png">
         <div class="card-title">Indonesia TopUp</div>
     </div>
@@ -162,6 +185,18 @@
     Fast • Safe • Reliable Free Fire Top-Up <br><br>
     Team — GM TOP UP
 </div>
+
+<script>
+function logout(){
+    localStorage.removeItem("gm_logged");
+    localStorage.removeItem("gmuser_name");
+    localStorage.removeItem("gmuser_email");
+    localStorage.removeItem("gmuser_pass");
+
+    alert("Logged out!");
+    window.location.href = "login.html";
+}
+</script>
 
 </body>
 </html>
